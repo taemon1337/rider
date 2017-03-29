@@ -8,8 +8,6 @@
 </template>
 
 <script>
-import RegisterPage from '@/pages/RegisterPage'
-
 export default {
   name: 'app',
   data () {
@@ -17,9 +15,6 @@ export default {
       href: 'http://stellarriding.com',
       logo: '/static/stellar-logo.png'
     }
-  },
-  components: {
-    RegisterPage
   }
 }
 </script>

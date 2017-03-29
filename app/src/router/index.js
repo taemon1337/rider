@@ -14,12 +14,12 @@ export default new Router({
       component: Home
     },
     {
-      path: '/register/:_id',
+      path: '/register/:id',
       name: 'register',
       component: RegisterPage
     },
     {
-      path: '/edit-event/:_id',
+      path: '/edit-event/:id',
       name: 'edit-event',
       component: EditEventPage
     }

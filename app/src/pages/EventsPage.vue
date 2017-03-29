@@ -5,7 +5,11 @@
         <md-card-header>
           <md-card-header-text>
             <div class="md-title">{{ ecard.title }}</div>
-            <div class="md-subhead">{{ ecard.subtitle }}</div>
+            <div class="md-subhead">
+              {{ ecard.subtitle }}
+              <br>
+              {{ ecard.date }}
+            </div>
           </md-card-header-text>
 
           <md-menu md-size="4" md-direction="bottom left">
@@ -14,18 +18,14 @@
             </md-button>
 
             <md-menu-content>
-              <md-menu-item>
-                <router-link :to="{ path: '/edit-event', params: { _id: ecard._id }}">
-                  <md-icon>mode_edit</md-icon>
-                  Edit Event
-                </router-link>
+              <md-menu-item @selected="$router.push({ path: '/edit-event/' + ecard._id })">
+                <md-icon>mode_edit</md-icon>
+                Edit Event
               </md-menu-item>
 
-              <md-menu-item>
-                <router-link :to="{ path: '/register', params: { _id: ecard._id }}">
-                  <md-icon>person_add</md-icon>
-                  Register Rider
-                </router-link>
+              <md-menu-item @selected="$router.push({ path: '/register/' + ecard._id})">
+                <md-icon>person_add</md-icon>
+                Register Rider
               </md-menu-item>
             </md-menu-content>
           </md-menu>
@@ -38,7 +38,7 @@
         <md-card-content>
           {{ ecard.content }}
 
-          <router-link :to="{ path: 'register', params: { _id: ecard._id }}">
+          <router-link :to="{ path: '/register/' + ecard._id }">
             <md-button class="md-primary md-raised">Register Rider</md-button>
           </router-link>
         </md-card-content>
@@ -55,7 +55,8 @@
         events: [
           {
             _id: 1,
-            title: 'Show 1',
+            title: 'Stellar Riding Schooling Show',
+            date: 'April 29th, 2017 at 8:00 AM',
             subtitle: 'This is a show!',
             image: '/static/horse-show-1.jpg',
             content: '',
@@ -68,6 +69,7 @@
           {
             _id: 2,
             title: 'Show 2',
+            date: 'June 25th, 2017 at 8:00 AM',
             subtitle: 'This is a show!',
             content: '',
             image: '/static/horse-show-1.jpg',
@@ -78,6 +80,11 @@
             ]
           }
         ]
+      }
+    },
+    methods: {
+      menuItemSelected (e) {
+        window.e = e
       }
     }
   }
