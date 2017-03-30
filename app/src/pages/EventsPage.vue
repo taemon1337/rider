@@ -1,7 +1,7 @@
 <template>
-  <div style="padding:15px;">
-    <md-layout md-flex-xsmall="100" md-flex-small="50" md-flex-medium="33">
-      <md-card md-with-hover v-for="ecard in events" key="_id" style="width:100%;margin:15px;padding:15px;">
+  <md-layout md-gutter style="padding:15px;">
+    <md-layout md-flex-xsmall="100">
+      <md-card md-with-hover v-for="ecard in events" key="_id" style="width:450px;margin:15px;padding:15px;">
         <md-card-header>
           <md-card-header-text>
             <div class="md-title">{{ ecard.title }}</div>
@@ -44,7 +44,7 @@
         </md-card-content>
       </md-card>
     </md-layout>
-  </div>
+  </md-layout>
 </template>
 
 <script>

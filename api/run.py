@@ -5,10 +5,113 @@ MONGO_HOST = getenv("MONGO_HOST","mongo")
 MONGO_PORT = int(getenv("MONGO_PORT", "27017"))
 MONGO_DBNAME = getenv("MONGO_DBNAME","riderdb")
 
-form_schema = {
-  'fields': {
-    'type': 'dict',
-    'default': {}
+event_schema = {
+  'title': {
+    'type': 'string',
+    'required': True
+  },
+  'subtitle': {
+    'type': 'string',
+    'default': ''
+  },
+  'description': {
+    'type': 'string',
+    'default': ''
+  },
+  'location': {
+    'type': 'string',
+    'default': ''
+  },
+  'date': {
+    'type': 'string',
+    'default': ''
+  },
+  'time': {
+    'type': 'string',
+    'default': ''
+  }
+}
+
+class_schema = {
+  'uid': {
+    'type': 'string',
+    'required': True
+  },
+  'title': {
+    'type': 'string',
+    'required': True
+  },
+  'details': {
+    'type': 'string',
+    'default': ''
+  },
+}
+
+rider_schema = {
+  'name': {
+    'type': 'string',
+    'required': True
+  },
+  'email': {
+    'type': 'string',
+    'required': True
+  },
+  'birthyear': {
+    'type': 'number',
+    'required': True
+  }
+}
+
+horse_schema = {
+  'name': {
+    'type': 'string',
+    'required': True
+  },
+  'owner': {
+    'type': 'string',
+    'required': True
+  },
+  'details': {
+    'type': 'string',
+    'required': True
+  }
+}
+
+entry_schema = {
+  'event': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'events',
+      'field': '_id',
+      'embeddable': True
+    }
+  },
+  'rider': {
+    'required': True,
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'riders',
+      'field': '_id',
+      'embeddable': True
+    }
+  },
+  'horse': {
+    'required': True,
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'horses',
+      'field': '_id',
+      'embeddable': True
+    }
+  },
+  'class': {
+    'required': True,
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'classes',
+      'field': '_id',
+      'embeddable': True
+    }
   }
 }
 
@@ -24,10 +127,23 @@ settings = {
   'RETURN_MEDIA_AS_BASE64_STRING': False,
   'EXTENDED_MEDIA_INFO': ['name','length','content_type'],
   'MEDIA_ENDPOINT': 'raw',
+  'XML': False,
   'DATE_FORMAT': '%Y-%m-%d %H:%M:%S',
   'DOMAIN': {
-    'forms': {
-      'schema': form_schema
+    'events': {
+      'schema': event_schema
+    },
+    'classes': {
+      'schema': class_schema
+    },
+    'riders': {
+      'schema': rider_schema
+    },
+    'horses': {
+      'schema': horse_schema
+    },
+    'entries': {
+      'schema': entry_schema
     }
   }
 }
