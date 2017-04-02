@@ -1,28 +1,15 @@
-import { EntryTypes } as types from '../mutation-types'
-import Api from '@/api'
+import { refsConfig } from '../store'
 
-const state = {
-  all: []
+const eRef = refsConfig.entries.source
+
+export const addEntry = (entry) => {
+  eRef.push(entry)
 }
 
-const getters = {
-  [EntryTypes.findAll]: state => state.all
+export const deleteEntry = (entry) => {
+  eRef.child(entry['.key']).remove()
 }
 
-const actions = {
-  [EntryTypes.findAll] ({ commit }) {
-    Api.findAll('entries').then(function (entries) {
-      commit(EntryTypes.findAll, { entries })
-    })
-  }
+export const updateEntry = (entry, attrs) => {
+  eRef.child(entry['.key']).update(attrs)
 }
-
-const mutations = {}
-
-export default {
-  state,
-  getters,
-  actions,
-  mutations
-}
-

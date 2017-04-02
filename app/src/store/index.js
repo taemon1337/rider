@@ -1,22 +1,23 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import * as actions from './actions'
-import * as getters from './getters'
-import riders from './modules/riders'
-import horses from './modules/horses'
-import entries from './modules/entries'
+import FireVuex from 'firevuex'
+import Api from '@/api'
+import currentUser from './modules/currentUser'
 
 Vue.use(Vuex)
 
-const debug = process.env.NODE_ENV !== 'production'
-
-export default new Vuex.Store({
-  actions,
-  getters,
+const store = new Vuex.Store({
   modules: {
-    riders,
-    horses,
-    entries
-  },
-  strict: debug
+    currentUser: currentUser
+  }
 })
+
+FireVuex.bindDatabase(store, Api.firebase, {
+  'events': {
+    source: 'events',
+    type: 'array'
+  }
+})
+
+export default store
+

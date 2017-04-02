@@ -1,28 +1,15 @@
-import { HorseTypes } as types from '../mutation-types'
-import Api from '@/api'
+import { refsConfig } from '../store'
 
-const state = {
-  all: []
+const eRef = refsConfig.horses.source
+
+export const addHorse = (horse) => {
+  eRef.push(horse)
 }
 
-const getters = {
-  [HorseTypes.findAll]: state => state.all
+export const deleteHorse = (horse) => {
+  eRef.child(horse['.key']).remove()
 }
 
-const actions = {
-  [HorseTypes.findAll] ({ commit }) {
-    Api.findAll('horses').then(function (horses) {
-      commit(HorseTypes.findAll, { horses })
-    })
-  }
+export const updateHorse = (horse, attrs) => {
+  eRef.child(horse['.key']).update(attrs)
 }
-
-const mutations = {}
-
-export default {
-  state,
-  getters,
-  actions,
-  mutations
-}
-

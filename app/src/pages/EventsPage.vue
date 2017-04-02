@@ -12,7 +12,7 @@
             </div>
           </md-card-header-text>
 
-          <md-menu md-size="4" md-direction="bottom left">
+          <md-menu v-if="canEdit" md-size="4" md-direction="bottom left">
             <md-button class="md-icon-button" md-menu-trigger>
               <md-icon>more_vert</md-icon>
             </md-button>
@@ -22,11 +22,6 @@
                 <md-icon>mode_edit</md-icon>
                 Edit Event
               </md-menu-item>
-
-              <md-menu-item @selected="$router.push({ path: '/register/' + ecard._id})">
-                <md-icon>person_add</md-icon>
-                Register Rider
-              </md-menu-item>
             </md-menu-content>
           </md-menu>
         </md-card-header>
@@ -34,57 +29,56 @@
         <md-card-media>
           <img :src="ecard.image" alt="Stellar Horse Show" style="width:150px;">
         </md-card-media>
+        <br>
 
-        <md-card-content>
-          {{ ecard.content }}
+        <md-card-expand>
+          <md-card-actions v-if="!currentUser">
+            <md-button class="md-raised md-primary" @click.native="login">Sign in to Register</md-button>
+            <span style="flex: 1"></span>
+            <md-button class="md-icon-button" md-expand-trigger>
+              <md-icon>keyboard_arrow_down</md-icon>
+            </md-button>
+          </md-card-actions>
+          <md-card-actions v-else>
+            <router-link :to="{ path: '/register/' + ecard._id }">
+              <md-button class="md-primary md-raised">Register Rider</md-button>
+            </router-link>
+            <span style="flex: 1"></span>
+            <md-button class="md-icon-button" md-expand-trigger>
+              <md-icon>keyboard_arrow_down</md-icon>
+            </md-button>
+          </md-card-actions>
 
-          <router-link :to="{ path: '/register/' + ecard._id }">
-            <md-button class="md-primary md-raised">Register Rider</md-button>
-          </router-link>
-        </md-card-content>
+          <md-card-content>
+            {{ ecard.content }}<br>
+          </md-card-content>
+        </md-card-expand>
       </md-card>
     </md-layout>
   </md-layout>
 </template>
 
 <script>
+  import { mapGetters, mapState, mapActions } from 'vuex'
+
   export default {
     name: 'EventsPage',
     data () {
-      return {
-        events: [
-          {
-            _id: 1,
-            title: 'Stellar Riding Schooling Show',
-            date: 'April 29th, 2017 at 8:00 AM',
-            subtitle: 'This is a show!',
-            image: '/static/horse-show-1.jpg',
-            content: '',
-            actions: [
-              {
-                text: 'Register'
-              }
-            ]
-          },
-          {
-            _id: 2,
-            title: 'Show 2',
-            date: 'June 25th, 2017 at 8:00 AM',
-            subtitle: 'This is a show!',
-            content: '',
-            image: '/static/horse-show-1.jpg',
-            actions: [
-              {
-                text: 'Register'
-              }
-            ]
-          }
-        ]
-      }
+      return {}
+    },
+    computed: {
+      ...mapGetters({
+        isAdmin: 'isAdmin',
+        events: 'events/get'
+      }),
+      ...mapState({
+        currentUser: state => state.currentUser.currentUser
+      })
     },
     methods: {
-      menuItemSelected (e) {
-        window.e = e
+      ...mapActions(['login', 'logout']),
+      canEdit (evt) {
+        return this.isAdmin() || evt.owner.email === this.currentUser.email
       }
     }
   }

@@ -1,28 +1,15 @@
-import { RiderTypes } as types from '../mutation-types'
-import Api from '@/api'
+import { refsConfig } from '../store'
 
-const state = {
-  all: []
+const eRef = refsConfig.riders.source
+
+export const addRider = (rider) => {
+  eRef.push(rider)
 }
 
-const getters = {
-  [RiderTypes.findAll]: state => state.all
+export const deleteRider = (rider) => {
+  eRef.child(rider['.key']).remove()
 }
 
-const actions = {
-  [RiderTypes.findAll] ({ commit }) {
-    Api.findAll('riders').then(function (riders) {
-      commit(RiderTypes.findAll, { riders })
-    })
-  }
+export const updateRider = (rider, attrs) => {
+  eRef.child(rider['.key']).update(attrs)
 }
-
-const mutations = {}
-
-export default {
-  state,
-  getters,
-  actions,
-  mutations
-}
-

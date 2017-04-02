@@ -1,15 +1,19 @@
-import axios from 'axios'
-import path from 'path'
+import Firebase from 'firebase'
 
-const base = process.env.API || "http://localhost:8080/api"
-
-const Api = {
-  findAll (resource, opts) {
-    return axios.get(path.join(base, resource)).then(function (resp) {
-      return resp._items
-    })
-  }
+// Initialize Firebase
+const config = {
+  apiKey: 'AIzaSyC3MigokWku0ZzC2icvMrEUwzDGL1PlKpQ',
+  authDomain: 'rider-3760a.firebaseapp.com',
+  databaseURL: 'https://rider-3760a.firebaseio.com',
+  projectId: 'rider-3760a',
+  storageBucket: 'rider-3760a.appspot.com',
+  messagingSenderId: '434705841728'
 }
 
-export default Api
+const fb = Firebase.initializeApp(config)
+const db = fb.database()
 
+export default {
+  firebase: fb,
+  database: db
+}

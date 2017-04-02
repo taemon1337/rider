@@ -3,7 +3,12 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import store from './store'
+import Api from './api'
 import VueMaterial from 'vue-material'
+
+window.Api = Api
+window.store = store
 
 Vue.use(VueMaterial)
 Vue.config.productionTip = false
@@ -12,6 +17,11 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
+  store,
   template: '<App/>',
-  components: { App }
+  components: { App },
+  beforeCreate () {
+    console.log('starting...')
+    store.dispatch('isLoggedIn')
+  }
 })

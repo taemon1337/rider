@@ -128,6 +128,9 @@ settings = {
   'EXTENDED_MEDIA_INFO': ['name','length','content_type'],
   'MEDIA_ENDPOINT': 'raw',
   'XML': False,
+  'X_DOMAINS': '*',
+  'X_HEADERS': '*',
+  'X_ALLOW_CREDENTIALS': True,
   'DATE_FORMAT': '%Y-%m-%d %H:%M:%S',
   'DOMAIN': {
     'events': {

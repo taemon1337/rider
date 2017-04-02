@@ -1,22 +1,22 @@
 <template>
   <div id='app'>
-    <a :href="href" target="_blank">
-      <img :src="logo">
-    </a>
+    <Navbar></Navbar>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
-export default {
-  name: 'app',
-  data () {
-    return {
-      href: 'http://stellarriding.com',
-      logo: '/static/stellar-logo.png'
+  import Navbar from '@/components/Navbar'
+
+  export default {
+    name: 'app',
+    data () {
+      return {}
+    },
+    components: {
+      Navbar
     }
   }
-}
 </script>
 
 <style>

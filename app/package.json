@@ -14,6 +14,8 @@
   },
   "dependencies": {
     "axios": "^0.15.3",
+    "firebase": "^3.7.4",
+    "firevuex": "^0.3.0",
     "vue": "^2.2.2",
     "vue-datepicker": "^1.3.0",
     "vue-material": "^0.7.1",
