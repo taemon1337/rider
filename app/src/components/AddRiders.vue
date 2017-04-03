@@ -4,11 +4,37 @@
       <md-toolbar>
         <h1 class="md-title">Register Riders</h1>
 
-        <md-button class="md-icon-button md-raised md-primary" @click.native="addRider">
+        <md-button class="md-icon-button md-raised md-primary" @click.native="openRiderForm" id="openForm">
           <md-tooltip>Click to add rider</md-tooltip>
           <md-icon>add</md-icon>
         </md-button>
       </md-toolbar>
+
+      <md-dialog md-open-from="#openForm" md-close-to="#openForm" @close.native="formClosed" ref="riderFormDialog">
+        <md-dialog-title>Add New Rider</md-dialog-title>
+
+        <md-dialog-content style="width:400px;">
+          <form ref="riderForm">
+            <md-input-container>
+              <label>Rider Name</label>
+              <md-input v-model="rider.name" required></md-input>
+            </md-input-container>
+
+            <md-input-container>
+              <label>Rider Email</label>
+              <md-input v-model="rider.email" required></md-input>
+            </md-input-container>
+
+            <md-input-container>
+              <label>Birth Year</label>
+              <md-input type="number" v-model="rider.birthyear" required></md-input>
+            </md-input-container>
+
+            <md-button class="md-raised md-primary" @click.native="saveRider"> Save </md-button>
+            <md-button class="md-raised" @click.native="closeRiderForm"> Cancel </md-button>
+          </form>
+        </md-dialog-content>
+      </md-dialog>
 
       <md-table md-sort="index">
         <md-table-header>
@@ -54,19 +80,38 @@
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
+
   export default {
     name: 'AddRiders',
     data () {
       return {
-        riders: []
+        rider: {}
       }
     },
+    computed: {
+      ...mapGetters({
+        riders: 'riders/get'
+      })
+    },
     methods: {
-      removeRider (index) {
-        this.riders.splice(index, 1)
+      removeRider (rider) {
+        this.$store.dispatch('riders/remove', rider)
       },
-      addRider () {
-        this.riders.push({ name: null, email: null, birthyear: null })
+      saveRider () {
+        if (this.rider.id) {
+
+        } else {
+          this.$store.dispatch('riders/add', this.rider)
+          this.rider = { name: null }
+          this.closeRiderForm()
+        }
+      },
+      openRiderForm () {
+        this.$refs.riderFormDialog.open()
+      },
+      closeRiderForm () {
+        this.$refs.riderFormDialog.close()
       }
     }
   }

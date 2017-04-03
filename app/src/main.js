@@ -6,6 +6,7 @@ import router from './router'
 import store from './store'
 import Api from './api'
 import VueMaterial from 'vue-material'
+import { CurrentUserTypes } from '@/store/mutation-types'
 
 window.Api = Api
 window.store = store
@@ -22,6 +23,6 @@ new Vue({
   components: { App },
   beforeCreate () {
     console.log('starting...')
-    store.dispatch('isLoggedIn')
+    store.dispatch(CurrentUserTypes.isLoggedIn)
   }
 })

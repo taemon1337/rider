@@ -12,7 +12,7 @@
             </div>
           </md-card-header-text>
 
-          <md-menu v-if="canEdit" md-size="4" md-direction="bottom left">
+          <md-menu v-if="canEdit()" md-size="4" md-direction="bottom left">
             <md-button class="md-icon-button" md-menu-trigger>
               <md-icon>more_vert</md-icon>
             </md-button>
@@ -60,6 +60,7 @@
 
 <script>
   import { mapGetters, mapState, mapActions } from 'vuex'
+  import { CurrentUserTypes } from '@/store/mutation-types'
 
   export default {
     name: 'EventsPage',
@@ -68,7 +69,7 @@
     },
     computed: {
       ...mapGetters({
-        isAdmin: 'isAdmin',
+        isAdmin: CurrentUserTypes.isAdmin,
         events: 'events/get'
       }),
       ...mapState({
@@ -76,9 +77,12 @@
       })
     },
     methods: {
-      ...mapActions(['login', 'logout']),
+      ...mapActions({
+        login: CurrentUserTypes.login,
+        logout: CurrentUserTypes.logout
+      }),
       canEdit (evt) {
-        return this.isAdmin() || evt.owner.email === this.currentUser.email
+        return this.isAdmin || (this.currentUser && evt.owner.email === this.currentUser.email)
       }
     }
   }

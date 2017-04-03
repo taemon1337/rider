@@ -13,10 +13,10 @@ const store = new Vuex.Store({
 })
 
 FireVuex.bindDatabase(store, Api.firebase, {
-  'events': {
-    source: 'events',
-    type: 'array'
-  }
+  'events': { source: 'events', type: 'array' },
+  'riders': { source: 'riders', type: 'array' },
+  'horses': { source: 'horses', type: 'array' },
+  'entries': { source: 'entries', type: 'array' }
 })
 
 export default store

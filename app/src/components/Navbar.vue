@@ -30,6 +30,7 @@
 
 <script>
   import { mapState, mapActions } from 'vuex'
+  import { CurrentUserTypes } from '@/store/mutation-types'
 
   export default {
     name: 'Navbar',
@@ -46,7 +47,10 @@
       })
     },
     methods: {
-      ...mapActions(['login', 'logout'])
+      ...mapActions({
+        login: CurrentUserTypes.login,
+        logout: CurrentUserTypes.logout
+      })
     }
   }
 </script>
