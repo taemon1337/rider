@@ -18,9 +18,13 @@
             </md-button>
 
             <md-menu-content>
-              <md-menu-item @selected="$router.push({ path: '/edit-event/' + ecard._id })">
+              <md-menu-item @selected="$router.push({ path: '/edit-event/' + ecard.key })">
                 <md-icon>mode_edit</md-icon>
                 Edit Event
+              </md-menu-item>
+              <md-menu-item @selected="removeEvent(ecard)">
+                <md-icon>delete_forever</md-icon>
+                Remove Event
               </md-menu-item>
             </md-menu-content>
           </md-menu>
@@ -83,6 +87,12 @@
       }),
       canEdit (evt) {
         return this.isAdmin || (this.currentUser && evt.owner.email === this.currentUser.email)
+      },
+      removeEvent (evt) {
+        let ans = confirm('Are you sure you want to delete the "' + evt.title + '" event?')
+        if (ans) {
+          this.$store.dispatch('events/remove', evt)
+        }
       }
     }
   }

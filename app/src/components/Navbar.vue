@@ -7,6 +7,8 @@
 
     <h2 class="md-title" style="flex: 1"></h2>
 
+    <md-button v-if="canAddEvent" @click.native="$router.push('/edit-event/new')" class="md-raised md-primary">Add Your Show</md-button>
+
     <span v-if="!currentUser">
       <md-button @click.native="login">
         <img :src="googleLoginLogo">
@@ -50,7 +52,10 @@
       ...mapActions({
         login: CurrentUserTypes.login,
         logout: CurrentUserTypes.logout
-      })
+      }),
+      canAddEvent () {
+        return this.currentUser
+      }
     }
   }
 </script>
