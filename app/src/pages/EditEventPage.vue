@@ -13,16 +13,19 @@
         <md-input v-model="form.subtitle" maxlength="150" required></md-input>
       </md-input-container>
 
-      <date-picker></date-picker>
-
       <md-input-container>
         <label>Event Image</label>
         <md-file v-model="form.image" accept="image/*"></md-file>
       </md-input-container>
 
+      <md-input-container style="width:250px;">
+        <label>Select Date</label>
+        <md-input v-model="form.date" type="datetime-local"></md-input>
+      </md-input-container>
+
       <md-input-container>
         <label>Details</label>
-        <md-textarea maxlength="1000" rows="4" :value="form.content" required></md-textarea>
+        <md-textarea maxlength="1000" rows="4" v-model="form.content" required></md-textarea>
       </md-input-container>
 
       <md-button class="md-raised md-primary" @click.native="save">Save</md-button>
@@ -32,8 +35,7 @@
 </template>
 
 <script>
-  import DatePicker from '@/components/DatePicker'
-  import { mapState } from 'vuex'
+  import { mapState, mapGetters } from 'vuex'
 
   export default {
     name: 'EditEventPage',
@@ -43,9 +45,11 @@
       }
     },
     components: {
-      DatePicker
     },
     computed: {
+      ...mapGetters({
+        events: 'events/get'
+      }),
       ...mapState({
         currentUser: state => state.currentUser.currentUser
       })
@@ -60,14 +64,23 @@
           }
           this.$store.dispatch('events/add', this.form)
         } else {
-          this.$store.dispatch('events/update', Object.assign({ uid: this.$route.params.id }, this.form))
+          this.$store.dispatch('events/update', Object.assign({ '.key': this.$route.params.id }, this.form))
         }
         this.form = {}
         this.$router.back()
       }
     },
     created () {
-      window.router = this.$router
+      console.log('CREATED', this.events)
+      let self = this
+      if (self.$route.params.id !== 'new') {
+        let evt = self.events.filter(function (evt) { return evt['.key'] === self.$route.params.id })[0]
+        if (evt) {
+          for (var key in evt) {
+            self.form[key] = evt[key]
+          }
+        }
+      }
     }
   }
 </script>

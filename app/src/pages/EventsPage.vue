@@ -18,7 +18,7 @@
             </md-button>
 
             <md-menu-content>
-              <md-menu-item @selected="$router.push({ path: '/edit-event/' + ecard.key })">
+              <md-menu-item @selected="$router.push({ path: '/edit-event/' + ecard['.key'] })">
                 <md-icon>mode_edit</md-icon>
                 Edit Event
               </md-menu-item>
