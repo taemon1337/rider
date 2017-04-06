@@ -26,8 +26,23 @@
             </md-input-container>
 
             <md-input-container>
-              <label>Birth Year</label>
+              <label>Rider Birth Year</label>
               <md-input type="number" v-model="rider.birthyear" required></md-input>
+            </md-input-container>
+
+            <md-input-container>
+              <label>Trainer or Coach's Name</label>
+              <md-input v-model="rider.trainer" required></md-input>
+            </md-input-container>
+
+            <md-input-container>
+              <label>Trainer or Coach's Email</label>
+              <md-input v-model="rider.trainer_email" required></md-input>
+            </md-input-container>
+
+            <md-input-container>
+              <label>Group name</label>
+              <md-input v-model="rider.group" placeholder="Group, Team, or Barn name" required></md-input>
             </md-input-container>
 
             <md-button class="md-raised md-primary" @click.native="saveRider"> Save </md-button>
@@ -40,8 +55,9 @@
         <md-table-header>
           <md-table-row>
             <md-table-head>Rider Name</md-table-head>
-            <md-table-head>Contact Email</md-table-head>
-            <md-table-head>Birth Year</md-table-head>
+            <md-table-head>Trainer</md-table-head>
+            <md-table-head>Team</md-table-head>
+            <md-table-head>Age</md-table-head>
             <md-table-head></md-table-head>
           </md-table-row>
         </md-table-header>
@@ -49,28 +65,27 @@
         <md-table-body>
           <md-table-row v-for="(rider, index) in riders" :key="index" :md-item="rider">
             <md-table-cell>
-              <md-input-container>
-                <label>Name</label>
-                <md-input v-model="rider.name" required></md-input>
-              </md-input-container>
+              {{ rider.name }}
             </md-table-cell>
             <md-table-cell>
-              <md-input-container>
-                <label>Email</label>
-                <md-input v-model="rider.email" required></md-input>
-              </md-input-container>
+              {{ rider.trainer }}
             </md-table-cell>
             <md-table-cell>
-              <md-input-container>
-                <label>Birth Year</label>
-                <md-input type="number" v-model="rider.birthyear" required></md-input>
-              </md-input-container>
+              {{ rider.group }}
             </md-table-cell>
             <md-table-cell>
-              <md-button class="md-icon-button md-raised md-accent" @click.native="removeRider(rider)">
-                &times;
+              {{ age(rider) }}
+            </md-table-cell>
+            <md-table-cell>
+              <span>
+                <md-icon @click.native="editRider(rider)">mode_edit</md-icon>
+                <md-tooltip>Edit</md-tooltip>
+              </span>
+
+              <span>
+                <md-icon @click.native="removeRider(rider)">delete_forever</md-icon>
                 <md-tooltip>Remove Rider</md-tooltip>
-              </md-button>
+              </span>
             </md-table-cell>
           </md-table-row>
         </md-table-body>
@@ -95,17 +110,24 @@
       })
     },
     methods: {
+      age: function (rider) {
+        return new Date().getFullYear() - rider.birthyear
+      },
       removeRider (rider) {
         this.$store.dispatch('riders/remove', rider)
       },
+      editRider (rider) {
+        this.rider = rider
+        this.openRiderForm()
+      },
       saveRider () {
-        if (this.rider.id) {
-
+        if (this.rider['.key']) {
+          this.$store.dispatch('riders/update', this.rider)
         } else {
           this.$store.dispatch('riders/add', this.rider)
-          this.rider = { name: null }
-          this.closeRiderForm()
         }
+        this.rider = { name: null }
+        this.closeRiderForm()
       },
       openRiderForm () {
         this.$refs.riderFormDialog.open()

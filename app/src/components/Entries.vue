@@ -2,11 +2,6 @@
   <div style="width:100%;margin:15px;">
     <md-table-card>
       <md-toolbar>
-        <md-button :disabled="!entries.length" class="md-raised md-primary">
-          Submit Entries
-          <md-tooltip>You are not registered until you submit and confirm entries</md-tooltip>
-        </md-button>
-
         <h1 class="md-title">Your Entries in {{ event.title || 'this event' }}</h1>
 
         <md-button class="md-icon-button md-raised md-primary" @click.native="addEntry">
@@ -18,6 +13,7 @@
       <md-table md-sort="index">
         <md-table-header>
           <md-table-row>
+            <md-table-head>Registered</md-table-head>
             <md-table-head>Rider</md-table-head>
             <md-table-head>Horse</md-table-head>
             <md-table-head>Class</md-table-head>
@@ -26,18 +22,19 @@
         </md-table-header>
 
         <md-table-body>
-          <md-table-row v-for="(entry, rowIndex) in entries" :key="rowIndex" :md-item="entry">
+          <md-table-row v-for="(entry, rowIndex) in allEntries" :key="rowIndex" :md-item="entry">
             <md-table-cell>
-              <md-input-container>
-                <label>Rider name</label>
-                <md-input v-model="entry.rider"></md-input>
-              </md-input-container>
+              <md-icon :style="{ color: entry['.key'] ? 'green' : 'gray' }">{{ entry['.key'] ? 'check_circle' : 'more_horiz' }}</md-icon>
             </md-table-cell>
             <md-table-cell>
-              <md-input-container>
-                <label>Horse name</label>
-                <md-input v-model="entry.horse"></md-input>
-              </md-input-container>
+              <md-select placeholder="Select rider" name="rider" id="type" v-model="entry.rider">
+                <md-option v-for="rider in riders" key=".key" :value="rider['.key']">{{ rider.name }}</md-option>
+              </md-select>
+            </md-table-cell>
+            <md-table-cell>
+              <md-select placeholder="Select horse" name="horse" id="type" v-model="entry.horse">
+                <md-option v-for="horse in horses" key=".key" :value="horse['.key']">{{ horse.name }}</md-option>
+              </md-select>
             </md-table-cell>
             <md-table-cell>
               <md-select
@@ -57,20 +54,27 @@
           </md-table-row>
         </md-table-body>
       </md-table>
+
+      <md-toolbar>
+        <md-button :disabled="!newEntries.length" class="md-raised md-primary" @click.native="submit">
+          Submit Entries
+          <md-tooltip>You are not registered until you submit and confirm entries</md-tooltip>
+        </md-button>
+      </md-toolbar>
     </md-table-card>
   </div>
 </template>
 
 <script>
-  import Multiselect from 'vue-multiselect'
+  import { mapGetters, mapState } from 'vuex'
+  import { CurrentUserTypes } from '@/store/mutation-types'
+
   export default {
     name: 'Entries',
     data () {
       return {
         event: {},
-        riders: [],
-        horses: [],
-        entries: [],
+        newEntries: [],
         options: [
           { name: 'Lead Line 1', value: 'LL1' },
           { name: 'Walk Trot Cantor 1', value: 'WTC1' },
@@ -81,19 +85,45 @@
         ]
       }
     },
-    methods: {
-      submit (e) {
-        console.log('SUBMIT', e)
-      },
-      removeEntry (index) {
-        this.entries.splice(index, 1)
-      },
-      addEntry () {
-        this.entries.push({ rider: null, horse: null, class: null })
+    computed: {
+      ...mapGetters({
+        isAdmin: CurrentUserTypes.isAdmin,
+        events: 'events/get',
+        riders: 'riders/get',
+        horses: 'horses/get',
+        entries: 'entries/get'
+      }),
+      ...mapState({
+        currentUser: state => state.currentUser.currentUser
+      }),
+      allEntries: function () {
+        return this.newEntries.concat(this.entries)
       }
     },
-    components: {
-      Multiselect
+    methods: {
+      submit (e) {
+        var self = this
+        self.newEntries.forEach(function (entry, i) {
+          self.$store.dispatch('entries/add', entry)
+          self.newEntries.splice(i, 1)
+        })
+      },
+      removeEntry (index) {
+        this.newEntries.splice(index, 1)
+      },
+      addEntry () {
+        this.newEntries.push({ rider: null, horse: null, class: null })
+      }
+    },
+    created () {
+      let self = this
+      if (self.$route.params.id) {
+        let evt = self.events.filter(function (evt) { return evt['.key'] === self.$route.params.id })[0]
+        if (evt) {
+          self.event = evt
+        }
+      }
     }
+
   }
 </script>

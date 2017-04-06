@@ -31,7 +31,7 @@
         </md-card-header>
 
         <md-card-media>
-          <img :src="ecard.image" alt="Stellar Horse Show" style="width:150px;">
+          <img :src="ecard.image" alt="Stellar Horse Show">
         </md-card-media>
         <br>
 
@@ -44,7 +44,7 @@
             </md-button>
           </md-card-actions>
           <md-card-actions v-else>
-            <router-link :to="{ path: '/register/' + ecard._id }">
+            <router-link :to="{ path: '/register/' + ecard['.key'] }">
               <md-button class="md-primary md-raised">Register Rider</md-button>
             </router-link>
             <span style="flex: 1"></span>

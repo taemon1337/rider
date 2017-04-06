@@ -15,7 +15,7 @@
 
       <md-input-container>
         <label>Event Image</label>
-        <md-file v-model="form.image" accept="image/*"></md-file>
+        <md-input v-model="form.image"></md-input>
       </md-input-container>
 
       <md-input-container style="width:250px;">
@@ -28,6 +28,8 @@
         <md-textarea maxlength="1000" rows="4" v-model="form.content" required></md-textarea>
       </md-input-container>
 
+      <add-event-classes></add-event-classes>
+
       <md-button class="md-raised md-primary" @click.native="save">Save</md-button>
       <md-button class="md-raised" @click.native="$router.back()">Cancel</md-button>
     </form>
@@ -36,6 +38,7 @@
 
 <script>
   import { mapState, mapGetters } from 'vuex'
+  import AddEventClasses from '@/components/AddEventClasses'
 
   export default {
     name: 'EditEventPage',
@@ -45,6 +48,7 @@
       }
     },
     components: {
+      AddEventClasses
     },
     computed: {
       ...mapGetters({
@@ -68,10 +72,12 @@
         }
         this.form = {}
         this.$router.back()
+      },
+      getClasses () {
+        return this.form.classes || {}
       }
     },
     created () {
-      console.log('CREATED', this.events)
       let self = this
       if (self.$route.params.id !== 'new') {
         let evt = self.events.filter(function (evt) { return evt['.key'] === self.$route.params.id })[0]
