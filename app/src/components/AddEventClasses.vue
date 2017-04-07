@@ -35,6 +35,11 @@
               <md-input v-model="klass.maxRiders" type="number" required></md-input>
             </md-input-container>
 
+            <md-input-container>
+              <label>Additional Info</label>
+              <md-textarea v-model="klass.details"></md-textarea>
+            </md-input-container>
+
             <md-button class="md-raised md-primary" @click.native="saveClass"> Save </md-button>
             <md-button class="md-raised" @click.native="closeClassForm"> Cancel </md-button>
           </form>
@@ -53,7 +58,7 @@
         </md-table-header>
 
         <md-table-body>
-          <md-table-row v-for="(klass, index) in classes" :key="index" :md-item="klass">
+          <md-table-row v-for="(klass, index) in value.classes" :key="index" :md-item="klass">
             <md-table-cell>
               {{ klass.division }}
             </md-table-cell>
@@ -85,29 +90,40 @@
 </template>
 
 <script>
+  import { mapState, mapGetters } from 'vuex'
+
   export default {
     name: 'AddEventClass',
-    props: {
-      classes: {
-        type: 'object',
-        required: true
-      }
-    },
+    props: ['value'],
     data () {
       return {
         klass: {}
       }
     },
+    computed: {
+      ...mapGetters({
+        events: 'events/get'
+      }),
+      ...mapState({
+        currentUser: state => state.currentUser.currentUser
+      })
+    },
     methods: {
       removeClass (index) {
-        this.classes.splice(index, 1)
+        var val = Object.assign({}, this.value)
+        val.classes.splice(index, 1)
+        this.$emit('input', val)
+        this.klass = { name: null }
       },
       editClass (klass) {
         this.klass = klass
         this.openClassForm()
       },
       saveClass () {
-        this.classes.push(this.klass)
+        var val = Object.assign({}, this.value)
+        val.classes = val.classes || []
+        val.classes.push(this.klass)
+        this.$emit('input', val)
         this.klass = { name: null }
         this.closeClassForm()
       },

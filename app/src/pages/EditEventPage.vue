@@ -28,7 +28,7 @@
         <md-textarea maxlength="1000" rows="4" v-model="form.content" required></md-textarea>
       </md-input-container>
 
-      <add-event-classes></add-event-classes>
+      <add-event-classes v-model="form"></add-event-classes>
 
       <md-button class="md-raised md-primary" @click.native="save">Save</md-button>
       <md-button class="md-raised" @click.native="$router.back()">Cancel</md-button>

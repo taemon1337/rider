@@ -55,6 +55,23 @@
 
           <md-card-content>
             {{ ecard.content }}<br>
+
+            <md-table>
+              <md-table-header>
+                <md-table-row>
+                  <md-table-head>Division</md-table-head>
+                  <md-table-head>Identifier</md-table-head>
+                  <md-table-head>Title</md-table-head>
+                </md-table-row>
+              </md-table-header>
+              <md-table-body>
+                <md-table-row v-for="(klass, index) in ecard.classes" key='index' :title="klass.details">
+                  <md-table-cell>{{ klass.division }}</md-table-cell>
+                  <md-table-cell>{{ klass.id }}</md-table-cell>
+                  <md-table-cell>{{ klass.title }}</md-table-cell>
+                </md-table-row>
+              </md-table-body>
+            </md-table>
           </md-card-content>
         </md-card-expand>
       </md-card>

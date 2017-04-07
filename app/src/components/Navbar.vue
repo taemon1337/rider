@@ -5,6 +5,14 @@
       <img :src="logotext">
     </a>
 
+    <md-button style="margin-right:0px;padding-right:0px;">
+      <md-icon>search</md-icon>
+    </md-button>
+
+    <md-input-container style="width:250px;">
+      <md-input placeholder="search"></md-input>
+    </md-input-container>
+
     <h2 class="md-title" style="flex: 1"></h2>
 
     <md-button v-if="canAddEvent" @click.native="$router.push('/edit-event/new')" class="md-raised md-primary">Add Your Show</md-button>
