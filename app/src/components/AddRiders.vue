@@ -135,6 +135,9 @@
       closeRiderForm () {
         this.$refs.riderFormDialog.close()
       }
+    },
+    created () {
+      this.$store.dispatch('riders/watch')
     }
   }
 </script>

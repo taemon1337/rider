@@ -7,8 +7,7 @@ const provider = new Firebase.auth.GoogleAuthProvider()
 provider.addScope('https://www.googleapis.com/auth/plus.login')
 
 const state = {
-  currentUser: null,
-  accessToken: null
+  currentUser: Firebase.auth().currentUser
 }
 
 const getters = {
@@ -21,20 +20,13 @@ const getters = {
 
 const actions = {
   [CurrentUserTypes.isLoggedIn] ({ commit }) {
-    let currentUser = JSON.parse(sessionStorage.getItem('currentUser'))
-    let accessToken = JSON.parse(sessionStorage.getItem('accessToken'))
-
-    if (currentUser) {
-      commit(CurrentUserTypes.login, { currentUser: currentUser, accessToken: accessToken })
-    } else {
-      Firebase.auth().getRedirectResult().then(function (result) {
-        if (result.credential) {
-          commit(CurrentUserTypes.login, { currentUser: result.user, accessToken: result.credential.accessToken })
-        }
-      }).catch(function (error) {
-        console.log('LOGIN ERROR: ', error)
-      })
-    }
+    Firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        commit(CurrentUserTypes.login, user)
+      } else {
+        commit(CurrentUserTypes.logout, null)
+      }
+    })
   },
   [CurrentUserTypes.login] ({ commit }) {
     Firebase.auth().signInWithRedirect(provider)
@@ -45,19 +37,15 @@ const actions = {
 }
 
 const mutations = {
-  [CurrentUserTypes.login] (state, payload) {
-    if (payload.currentUser) {
-      state.currentUser = payload.currentUser
-      state.accessToken = payload.accessToken
-      sessionStorage.setItem('currentUser', JSON.stringify(payload.currentUser))
-      sessionStorage.setItem('accessToken', JSON.stringify(payload.accessToken))
-    }
+  [CurrentUserTypes.login] (state, user) {
+    state.currentUser = user
   },
   [CurrentUserTypes.logout] () {
-    state.currentUser = null
-    state.accessToken = null
-    sessionStorage.removeItem('currentUser')
-    sessionStorage.removeItem('accessToken')
+    Firebase.auth().signOut().then(function () {
+      state.currentUser = null
+    }).catch(function (err) {
+      console.error('Error signing out.', err)
+    })
   }
 }
 

@@ -12,7 +12,7 @@
             </div>
           </md-card-header-text>
 
-          <md-menu v-if="canEdit()" md-size="4" md-direction="bottom left">
+          <md-menu v-if="canEdit(ecard)" md-size="4" md-direction="bottom left">
             <md-button class="md-icon-button" md-menu-trigger>
               <md-icon>more_vert</md-icon>
             </md-button>
@@ -31,7 +31,7 @@
         </md-card-header>
 
         <md-card-media>
-          <img :src="ecard.image" alt="Stellar Horse Show">
+          <img :src="ecard.image" alt="Stellar Horse Show" style="height:350px;">
         </md-card-media>
         <br>
 
